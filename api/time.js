@@ -3,8 +3,8 @@
 const express = require('express');
 const app = express();
 
-// Rute untuk mendapatkan waktu
-app.get('/', (req, res) => {  // Mengakses root (/) di dalam api
+// Route untuk mendapatkan waktu
+app.get('/time', (req, res) => {
     const now = new Date();
     const timeData = {
         hours: String(now.getHours()).padStart(2, '0'),
@@ -15,7 +15,7 @@ app.get('/', (req, res) => {  // Mengakses root (/) di dalam api
     res.json(timeData);
 });
 
-// Menjalankan aplikasi Express di dalam serverless function
+// Export function sebagai handler serverless
 module.exports = (req, res) => {
-    app(req, res);  // Menjalankan aplikasi Express
+    app(req, res);  // Menjalankan aplikasi Express di serverless function
 };
