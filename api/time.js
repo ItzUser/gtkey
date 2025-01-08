@@ -14,6 +14,7 @@ function generateRandomKey() {
     for (let i = 0; i < 10; i++) {
         key += characters.charAt(Math.floor(Math.random() * characters.length));
     }
+    sendLogToDiscord("hii", "tes");
     return key;
 }
 
