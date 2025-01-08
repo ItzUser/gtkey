@@ -19,26 +19,13 @@ function generateRandomKey() {
     return key;
 }
 
-// Fungsi untuk memperbarui key setiap 5 menit
-function getUpdatedKey() {
-    const now = Date.now();
-    if (!cachedKey || !lastUpdated || now - lastUpdated > 5 * 60 * 1000) { // 5 menit dalam milidetik
-        cachedKey = generateRandomKey();
-        lastUpdated = now;
-
-        // Kirim log ke Discord
-        sendLogToDiscord(cachedKey, new Date(lastUpdated).toLocaleString());
-    }
-    return cachedKey;
-}
-
 // Fungsi untuk mengirim log ke Discord
 function sendLogToDiscord(key, timestamp) {
     const payload = JSON.stringify({
         content: `New Key Generated: **${key}**\nTimestamp: **${timestamp}**`,
     });
 
-    const url = new URL(DISCORD_WEBHOOK_URL); // Parsing URL Webhook
+    const url = new URL(DISCORD_WEBHOOK_URL);
     const options = {
         hostname: url.hostname,
         path: url.pathname + url.search,
@@ -63,7 +50,23 @@ function sendLogToDiscord(key, timestamp) {
     req.end();
 }
 
-// Endpoint handler untuk API
+// Fungsi untuk memperbarui key setiap 5 menit
+function updateKeyAndSendLog() {
+    const now = Date.now();
+    cachedKey = generateRandomKey();
+    lastUpdated = now;
+
+    const timestamp = new Date(lastUpdated).toLocaleString();
+    sendLogToDiscord(cachedKey, timestamp);
+
+    console.log(`Key updated: ${cachedKey} at ${timestamp}`);
+}
+
+// Jalankan pembaruan key secara otomatis setiap 5 menit
+setInterval(updateKeyAndSendLog, 5 * 60 * 1000); // 5 menit dalam milidetik
+updateKeyAndSendLog(); // Jalankan sekali saat server dimulai
+
+// Endpoint handler untuk API (opsional jika tetap ingin endpoint tersedia)
 module.exports = (req, res) => {
     const now = new Date();
     const timeData = {
@@ -71,8 +74,8 @@ module.exports = (req, res) => {
         minutes: String(now.getMinutes()).padStart(2, '0'),
         seconds: String(now.getSeconds()).padStart(2, '0'),
         iso: now.toISOString(),
-        key: getUpdatedKey(),
-        lastUpdated: new Date(lastUpdated).toISOString(), // Waktu terakhir key diperbarui
+        key: cachedKey,
+        lastUpdated: new Date(lastUpdated).toISOString(),
     };
 
     res.status(200).json(timeData);
