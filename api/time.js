@@ -1,5 +1,3 @@
-// api/time.js
-
 const https = require('https');
 
 // Variabel untuk menyimpan key dan waktu pembaruan
@@ -50,7 +48,7 @@ function sendLogToDiscord(key, timestamp) {
     req.end();
 }
 
-// Fungsi untuk memperbarui key setiap 5 menit
+// Fungsi untuk memperbarui key dan mengirim log ke Discord
 function updateKeyAndSendLog() {
     const now = Date.now();
     cachedKey = generateRandomKey();
@@ -62,21 +60,23 @@ function updateKeyAndSendLog() {
     console.log(`Key updated: ${cachedKey} at ${timestamp}`);
 }
 
-// Jalankan pembaruan key secara otomatis setiap 5 menit
-setInterval(updateKeyAndSendLog, 5 * 60 * 1000); // 5 menit dalam milidetik
-updateKeyAndSendLog(); // Jalankan sekali saat server dimulai
+// Fungsi utama untuk API
+module.exports = async (req, res) => {
+    const now = Date.now();
+    if (!cachedKey || !lastUpdated || (now - lastUpdated > 5 * 60 * 1000)) {
+        // Update key jika sudah lebih dari 5 menit
+        updateKeyAndSendLog();
+    }
 
-// Endpoint handler untuk API (opsional jika tetap ingin endpoint tersedia)
-module.exports = (req, res) => {
-    const now = new Date();
+    const timestamp = new Date(lastUpdated).toLocaleString();
     const timeData = {
-        hours: String(now.getHours()).padStart(2, '0'),
-        minutes: String(now.getMinutes()).padStart(2, '0'),
-        seconds: String(now.getSeconds()).padStart(2, '0'),
-        iso: now.toISOString(),
+        hours: String(new Date().getHours()).padStart(2, '0'),
+        minutes: String(new Date().getMinutes()).padStart(2, '0'),
+        seconds: String(new Date().getSeconds()).padStart(2, '0'),
+        iso: new Date().toISOString(),
         key: cachedKey,
-        lastUpdated: new Date(lastUpdated).toISOString(),
+        lastUpdated: timestamp,
     };
 
-    res.status(200).json(timeData);
+    return res.status(200).json(timeData);
 };
