@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/time.js": {
+      "schedule": "*/5 * * * *"  // Menjalankan fungsi setiap 5 menit
+    }
+  }
+}
