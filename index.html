@@ -16,11 +16,12 @@
         }
 
         .container {
+            width: 90%; /* Menggunakan 90% lebar layar */
+            max-width: 800px; /* Membatasi lebar maksimum */
             background-color: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 400px;
             text-align: center;
         }
 
@@ -31,7 +32,7 @@
         }
 
         .info-table {
-            width: 100%;
+            width: 100%; /* Memanfaatkan seluruh lebar container */
             border-collapse: collapse;
         }
 
@@ -77,6 +78,10 @@
                 <td>Key</td>
                 <td id="key-container">Loading...</td>
             </tr>
+            <tr>
+                <td>Last Updated</td>
+                <td id="last-update-container">Loading...</td>
+            </tr>
         </table>
     </div>
 
@@ -85,15 +90,20 @@
             try {
                 const response = await fetch('/api/time'); // Fetch data dari API
                 const data = await response.json();
+
                 // Format waktu menjadi HOURS:MINUTES:SECONDS
                 const timeString = `${data.hours}:${data.minutes}:${data.seconds}`;
+                const lastUpdated = new Date(data.lastUpdated).toLocaleString(); // Format waktu update terakhir
+
+                // Menampilkan data ke elemen
                 document.getElementById('time-container').textContent = timeString;
-                // Menampilkan key
                 document.getElementById('key-container').textContent = data.key;
+                document.getElementById('last-update-container').textContent = lastUpdated;
             } catch (error) {
                 console.error('Error fetching time:', error);
                 document.getElementById('time-container').textContent = 'Error fetching time';
                 document.getElementById('key-container').textContent = 'Error fetching key';
+                document.getElementById('last-update-container').textContent = 'Error fetching last updated time';
             }
         }
 
