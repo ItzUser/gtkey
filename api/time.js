@@ -35,7 +35,9 @@ function sendLogToDiscord(key, timestamp) {
     };
 
     const req = https.request(options, (res) => {
-        if (res.statusCode !== 204) {
+        if (res.statusCode === 204) {
+            console.log("Log sent successfully to Discord");
+        } else {
             console.error(`Failed to send log to Discord: ${res.statusCode}`);
         }
     });
@@ -55,7 +57,7 @@ function updateKeyAndSendLog() {
     lastUpdated = now;
 
     const timestamp = new Date(lastUpdated).toLocaleString();
-    sendLogToDiscord(cachedKey, timestamp);
+    sendLogToDiscord(cachedKey, timestamp); // Kirim log ke Discord setelah key diperbarui
 
     console.log(`Key updated: ${cachedKey} at ${timestamp}`);
 }
@@ -63,8 +65,8 @@ function updateKeyAndSendLog() {
 // Fungsi utama untuk API
 module.exports = async (req, res) => {
     const now = Date.now();
-    if (!cachedKey || !lastUpdated || (now - lastUpdated > 5 * 60 * 1000)) {
-        // Update key jika sudah lebih dari 5 menit
+    if (!cachedKey || !lastUpdated || (now - lastUpdated > 60 * 1000)) {
+        // Update key jika sudah lebih dari 1 menit
         updateKeyAndSendLog();
     }
 
@@ -80,3 +82,7 @@ module.exports = async (req, res) => {
 
     return res.status(200).json(timeData);
 };
+
+// Jalankan pembaruan key secara otomatis setiap 1 menit
+setInterval(updateKeyAndSendLog, 60 * 1000);  // 1 menit dalam milidetik
+updateKeyAndSendLog(); // Jalankan sekali saat server dimulai
