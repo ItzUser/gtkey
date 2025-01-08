@@ -6,9 +6,10 @@
     <title>Current Time & Key</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #007bff, #004b8d);
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -16,73 +17,61 @@
         }
 
         .container {
-            width: 90%; /* Menggunakan 90% lebar layar */
-            max-width: 800px; /* Membatasi lebar maksimum */
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
             text-align: center;
+            width: 90%;
+            max-width: 600px;
         }
 
-        .container h1 {
-            font-size: 28px;
+        h1 {
+            font-size: 36px;
             margin-bottom: 20px;
-            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        .info-table {
-            width: 100%; /* Memanfaatkan seluruh lebar container */
-            border-collapse: collapse;
+        .info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .info-table th, .info-table td {
-            padding: 10px;
-            text-align: left;
+        .info div {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 18px;
         }
 
-        .info-table th {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #ddd;
-        }
-
-        .info-table td {
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-        }
-
-        .info-table tr:nth-child(even) td {
-            background-color: #e9ecef;
-        }
-
-        .info-table tr:last-child td {
+        .info div span.label {
+            display: block;
             font-weight: bold;
-            background-color: #d4edda;
+            font-size: 20px;
+            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Current Time & Key</h1>
-        <table class="info-table">
-            <tr>
-                <th>Label</th>
-                <th>Value</th>
-            </tr>
-            <tr>
-                <td>Time</td>
-                <td id="time-container">Loading...</td>
-            </tr>
-            <tr>
-                <td>Key</td>
-                <td id="key-container">Loading...</td>
-            </tr>
-            <tr>
-                <td>Last Updated</td>
-                <td id="last-update-container">Loading...</td>
-            </tr>
-        </table>
+        <div class="info">
+            <div>
+                <span class="label">Time:</span>
+                <span id="time-container">Loading...</span>
+            </div>
+            <div>
+                <span class="label">Key:</span>
+                <span id="key-container">Loading...</span>
+            </div>
+            <div>
+                <span class="label">Last Updated:</span>
+                <span id="last-update-container">Loading...</span>
+            </div>
+        </div>
     </div>
 
     <script>
