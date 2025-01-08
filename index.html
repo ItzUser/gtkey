@@ -3,42 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON Time</title>
+    <title>GT KEY SYSTEM</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
         }
-        pre {
-            font-size: 18px;
-            background: white;
-            padding: 20px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        h1 {
+            font-size: 36px;
+            margin: 0;
+            color: #333;
+        }
+        p {
+            font-size: 24px;
+            margin: 10px 0 0;
+            color: #555;
         }
     </style>
 </head>
 <body>
-    <pre id="time-container">Loading...</pre>
+    <h1>Current Time</h1>
+    <p id="time-container">Loading...</p>
 
     <script>
         async function fetchTime() {
             try {
-                const response = await fetch('/api/time');  // Menggunakan /api/time untuk serverless function
+                const response = await fetch('/api/time'); // Fetch waktu dari server
                 const data = await response.json();
-                document.getElementById('time-container').textContent = JSON.stringify(data, null, 2);
+                // Format waktu menjadi HOURS:MINUTES:SECONDS
+                const timeString = `${data.hours}:${data.minutes}:${data.seconds}`;
+                document.getElementById('time-container').textContent = timeString;
             } catch (error) {
                 console.error('Error fetching time:', error);
+                document.getElementById('time-container').textContent = 'Error fetching time';
             }
         }
 
-        // Update the time every second
+        // Update waktu setiap detik
         setInterval(fetchTime, 1000);
         fetchTime();
     </script>
