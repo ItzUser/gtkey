@@ -41,6 +41,5 @@ module.exports = async (req, res) => {
     return res.status(200).json(timeData);
 };
 
-// Jalankan pembaruan key secara otomatis setiap 1 menit
 setInterval(updateKeyAndSendLog, 60 * 60 * 1000);  // 1 menit dalam milidetik
 updateKey()
