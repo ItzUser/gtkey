@@ -18,7 +18,7 @@ function generateRandomKey() {
 }
 
 // Fungsi untuk mengirim log ke Discord
-async function sendLogToDiscord(key, timestamp) {
+    function sendLogToDiscord(key, timestamp) {
     const payload = {
         content: `New Key Generated: **${key}**\nTimestamp: **${timestamp}**`,
     };
