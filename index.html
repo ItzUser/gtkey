@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GT KEY SYSTEM</title>
+    <title>Current Time & Key</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,30 +22,34 @@
         }
         p {
             font-size: 24px;
-            margin: 10px 0 0;
+            margin: 10px 0;
             color: #555;
         }
     </style>
 </head>
 <body>
-    <h1>Current Time</h1>
+    <h1>Current Time & Key</h1>
     <p id="time-container">Loading...</p>
+    <p id="key-container">Loading...</p>
 
     <script>
         async function fetchTime() {
             try {
-                const response = await fetch('/api/time'); // Fetch waktu dari server
+                const response = await fetch('/api/time'); // Fetch data dari API
                 const data = await response.json();
                 // Format waktu menjadi HOURS:MINUTES:SECONDS
                 const timeString = `${data.hours}:${data.minutes}:${data.seconds}`;
-                document.getElementById('time-container').textContent = timeString;
+                document.getElementById('time-container').textContent = `Time: ${timeString}`;
+                // Menampilkan key
+                document.getElementById('key-container').textContent = `Key: ${data.key}`;
             } catch (error) {
                 console.error('Error fetching time:', error);
                 document.getElementById('time-container').textContent = 'Error fetching time';
+                document.getElementById('key-container').textContent = 'Error fetching key';
             }
         }
 
-        // Update waktu setiap detik
+        // Update waktu dan key setiap detik
         setInterval(fetchTime, 1000);
         fetchTime();
     </script>
