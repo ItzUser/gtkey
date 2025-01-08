@@ -23,7 +23,7 @@ function updateKey() {
 // Fungsi utama untuk API
 module.exports = async (req, res) => {
     const now = Date.now();
-    if (!cachedKey || !lastUpdated || (now - lastUpdated > 60 * 1000)) {
+    if (!cachedKey || !lastUpdated || (now - lastUpdated > 60 * 60 * 1000)) {
         // Update key jika sudah lebih dari 1 menit
         updateKey();
     }
