@@ -41,5 +41,5 @@ module.exports = async (req, res) => {
     return res.status(200).json(timeData);
 };
 
-setInterval(updateKeyAndSendLog, 60 * 60 * 1000);  // 1 menit dalam milidetik
+setInterval(updateKey, 60 * 60 * 1000);  // 1 menit dalam milidetik
 updateKey()
