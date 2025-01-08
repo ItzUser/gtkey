@@ -83,7 +83,7 @@ module.exports = async (req, res) => {
 
     return res.status(200).json(timeData);
 };
-sendLogToDiscord(hii4i4", "tes");
+
 // Jalankan pembaruan key secara otomatis setiap 1 menit
 setInterval(updateKeyAndSendLog, 60 * 1000);  // 1 menit dalam milidetik
 updateKeyAndSendLog(); // Jalankan sekali saat server dimulai
