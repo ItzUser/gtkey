@@ -14,26 +14,35 @@ function generateRandomKey() {
     for (let i = 0; i < 10; i++) {
         key += characters.charAt(Math.floor(Math.random() * characters.length));
     }
-    sendLogToDiscord("hii", "tes");
     return key;
 }
 
 // Fungsi untuk mengirim log ke Discord
-function sendLogToDiscord(key, timestamp) {
-    const payload = JSON.stringify({
+async function sendLogToDiscord(key, timestamp) {
+    const payload = {
         content: `New Key Generated: **${key}**\nTimestamp: **${timestamp}**`,
-    });
-
-    const url = new URL(DISCORD_WEBHOOK_URL);
-    const options = {
-        hostname: url.hostname,
-        path: url.pathname + url.search,
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(payload),
-        },
     };
+
+    try {
+        const response = await fetch(DISCORD_WEBHOOK_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (response.status === 204) {
+            console.log("Log sent successfully to Discord");
+        } else {
+            console.error(`Failed to send log to Discord: ${response.status}`);
+        }
+    } catch (error) {
+        console.error(`Error sending log to Discord: ${error.message}`);
+    }
+}
+
+
 
     const req = https.request(options, (res) => {
         if (res.statusCode === 204) {
