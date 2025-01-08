@@ -7,30 +7,78 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f8f9fa;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
         }
-        h1 {
-            font-size: 36px;
-            margin: 0;
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        .container h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
             color: #333;
         }
-        p {
-            font-size: 24px;
-            margin: 10px 0;
-            color: #555;
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .info-table th, .info-table td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .info-table th {
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #ddd;
+        }
+
+        .info-table td {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+
+        .info-table tr:nth-child(even) td {
+            background-color: #e9ecef;
+        }
+
+        .info-table tr:last-child td {
+            font-weight: bold;
+            background-color: #d4edda;
         }
     </style>
 </head>
 <body>
-    <h1>Current Time & Key</h1>
-    <p id="time-container">Loading...</p>
-    <p id="key-container">Loading...</p>
+    <div class="container">
+        <h1>Current Time & Key</h1>
+        <table class="info-table">
+            <tr>
+                <th>Label</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Time</td>
+                <td id="time-container">Loading...</td>
+            </tr>
+            <tr>
+                <td>Key</td>
+                <td id="key-container">Loading...</td>
+            </tr>
+        </table>
+    </div>
 
     <script>
         async function fetchTime() {
@@ -39,9 +87,9 @@
                 const data = await response.json();
                 // Format waktu menjadi HOURS:MINUTES:SECONDS
                 const timeString = `${data.hours}:${data.minutes}:${data.seconds}`;
-                document.getElementById('time-container').textContent = `Time: ${timeString}`;
+                document.getElementById('time-container').textContent = timeString;
                 // Menampilkan key
-                document.getElementById('key-container').textContent = `Key: ${data.key}`;
+                document.getElementById('key-container').textContent = data.key;
             } catch (error) {
                 console.error('Error fetching time:', error);
                 document.getElementById('time-container').textContent = 'Error fetching time';
