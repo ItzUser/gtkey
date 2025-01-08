@@ -1,8 +1,13 @@
 // api/time.js
 
+const https = require('https');
+
 // Variabel untuk menyimpan key dan waktu pembaruan
 let cachedKey = null;
 let lastUpdated = null;
+
+// Discord Webhook URL (ganti dengan webhook Anda sendiri)
+const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1326510907844722730/W4tKUX1HJdxHrkGnEN8sqtqmBPxbQHc7WoaY9BdyTYt_SHQaOy4DWoVfb3j3UhUToI4P";
 
 // Fungsi untuk menghasilkan key acak dengan angka dan huruf
 function generateRandomKey() {
@@ -20,10 +25,45 @@ function getUpdatedKey() {
     if (!cachedKey || !lastUpdated || now - lastUpdated > 5 * 60 * 1000) { // 5 menit dalam milidetik
         cachedKey = generateRandomKey();
         lastUpdated = now;
+
+        // Kirim log ke Discord
+        sendLogToDiscord(cachedKey, new Date(lastUpdated).toLocaleString());
     }
     return cachedKey;
 }
 
+// Fungsi untuk mengirim log ke Discord
+function sendLogToDiscord(key, timestamp) {
+    const payload = JSON.stringify({
+        content: `New Key Generated: **${key}**\nTimestamp: **${timestamp}**`,
+    });
+
+    const url = new URL(DISCORD_WEBHOOK_URL); // Parsing URL Webhook
+    const options = {
+        hostname: url.hostname,
+        path: url.pathname + url.search,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(payload),
+        },
+    };
+
+    const req = https.request(options, (res) => {
+        if (res.statusCode !== 204) {
+            console.error(`Failed to send log to Discord: ${res.statusCode}`);
+        }
+    });
+
+    req.on('error', (error) => {
+        console.error(`Error sending log to Discord: ${error.message}`);
+    });
+
+    req.write(payload);
+    req.end();
+}
+
+// Endpoint handler untuk API
 module.exports = (req, res) => {
     const now = new Date();
     const timeData = {
@@ -32,7 +72,8 @@ module.exports = (req, res) => {
         seconds: String(now.getSeconds()).padStart(2, '0'),
         iso: now.toISOString(),
         key: getUpdatedKey(),
-        lastUpdated: new Date(lastUpdated).toISOString() // Waktu terakhir key diperbarui
+        lastUpdated: new Date(lastUpdated).toISOString(), // Waktu terakhir key diperbarui
     };
+
     res.status(200).json(timeData);
 };
