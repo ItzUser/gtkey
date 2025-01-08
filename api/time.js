@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
     const now = Date.now();
     if (!cachedKey || !lastUpdated || (now - lastUpdated > 60 * 1000)) {
         // Update key jika sudah lebih dari 1 menit
-        updateKeyAndSendLog();
+        updateKey();
     }
 
     const timestamp = new Date(lastUpdated).toLocaleString();
