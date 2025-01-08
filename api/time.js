@@ -31,7 +31,8 @@ module.exports = (req, res) => {
         minutes: String(now.getMinutes()).padStart(2, '0'),
         seconds: String(now.getSeconds()).padStart(2, '0'),
         iso: now.toISOString(),
-        key: getUpdatedKey() // Menambahkan key ke dalam respons
+        key: getUpdatedKey(),
+        lastUpdated: new Date(lastUpdated).toISOString() // Waktu terakhir key diperbarui
     };
     res.status(200).json(timeData);
 };
