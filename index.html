@@ -33,22 +33,6 @@
             letter-spacing: 2px;
         }
 
-        .info {
-            margin: 20px 0;
-            display: none; /* Awalnya disembunyikan */
-        }
-
-        .info div {
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .label {
-            font-weight: bold;
-        }
-
         button {
             background: #28a745;
             color: white;
@@ -62,86 +46,36 @@
         button:hover {
             background: #218838;
         }
-
-        a {
-            color: #ffc107;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Generate Unique Links</h1>
-        <button id="action-btn">Generate Unique Link</button>
-        <div class="info" id="info-container">
-            <div>
-                <span class="label">Time:</span>
-                <span id="time-container">--:--:--</span>
-            </div>
-            <div>
-                <span class="label">Key:</span>
-                <span id="key-container">Loading...</span>
-            </div>
-            <div>
-                <span class="label">Last Updated:</span>
-                <span id="last-update-container">Loading...</span>
-            </div>
-            <div>
-                <span class="label">Generated Link:</span>
-                <a id="generated-link" href="#" target="_blank">Click here</a>
-            </div>
-        </div>
+        <button id="generate-link-btn">Generate Unique Link</button>
     </div>
 
     <script>
-        const button = document.getElementById('action-btn');
-        const infoContainer = document.getElementById('info-container');
-
-        // Fungsi untuk generate link
         async function generateLink() {
+            const button = document.getElementById('generate-link-btn');
+
+            // Fetch data dari API
             try {
                 const response = await fetch('/api/time'); // Ganti dengan endpoint API Anda
                 const data = await response.json();
 
-                // Isi elemen dengan data dari API
-                document.getElementById('time-container').textContent = `${data.hours}:${data.minutes}:${data.seconds}`;
-                document.getElementById('key-container').textContent = data.key;
-                document.getElementById('last-update-container').textContent = data.lastUpdated;
-
+                // Buat link yang akan dituju
                 const generatedLink = `/user/${data.key}`;
-                const linkElement = document.getElementById('generated-link');
-                linkElement.textContent = generatedLink;
-                linkElement.href = generatedLink;
 
-                // Tampilkan elemen informasi
-                infoContainer.style.display = 'block';
-
-                // Ubah teks tombol menjadi "Back"
-                button.textContent = 'Back';
+                // Redirect ke halaman yang sesuai dengan key
+                window.location.href = generatedLink;
             } catch (error) {
                 console.error('Error fetching data:', error);
                 alert('Failed to generate link. Please try again.');
             }
         }
 
-        // Fungsi untuk kembali ke tampilan awal
-        function resetView() {
-            infoContainer.style.display = 'none';
-            button.textContent = 'Generate Unique Link';
-        }
-
-        // Event listener untuk tombol
-        button.addEventListener('click', () => {
-            if (button.textContent === 'Generate Unique Link') {
-                generateLink();
-            } else {
-                resetView();
-            }
-        });
+        // Tambahkan event listener ke tombol
+        document.getElementById('generate-link-btn').addEventListener('click', generateLink);
     </script>
 </body>
 </html>
