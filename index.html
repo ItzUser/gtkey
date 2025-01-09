@@ -34,11 +34,15 @@
         }
 
         .info {
-            margin-bottom: 20px;
+            margin: 20px 0;
+            display: none; /* Awalnya disembunyikan */
         }
 
         .info div {
             margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 5px;
         }
 
         .label {
@@ -46,7 +50,7 @@
         }
 
         button {
-            background: #007bff;
+            background: #28a745;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -56,16 +60,11 @@
         }
 
         button:hover {
-            background: #0056b3;
-        }
-
-        #generated-link-container {
-            margin-top: 20px;
-            display: none;
+            background: #218838;
         }
 
         a {
-            color: #ffeb3b;
+            color: #ffc107;
             text-decoration: none;
         }
 
@@ -77,10 +76,11 @@
 <body>
     <div class="container">
         <h1>Generate Unique Links</h1>
-        <div class="info">
+        <button id="generate-link-btn">Generate Unique Link</button>
+        <div class="info" id="info-container">
             <div>
                 <span class="label">Time:</span>
-                <span id="time-container">Loading...</span>
+                <span id="time-container">--:--:--</span>
             </div>
             <div>
                 <span class="label">Key:</span>
@@ -90,51 +90,46 @@
                 <span class="label">Last Updated:</span>
                 <span id="last-update-container">Loading...</span>
             </div>
-        </div>
-        <button id="generate-link-btn">Generate Unique Link</button>
-        <div id="generated-link-container">
-            <span class="label">Generated Link:</span>
-            <a id="generated-link" href="#" target="_blank">Loading...</a>
+            <div>
+                <span class="label">Generated Link:</span>
+                <a id="generated-link" href="#" target="_blank">Click here</a>
+            </div>
         </div>
     </div>
 
     <script>
-        async function fetchTime() {
-            const response = await fetch('/api/time');
-            const data = await response.json();
-            document.getElementById('time-container').textContent = `${data.hours}:${data.minutes}:${data.seconds}`;
-            document.getElementById('key-container').textContent = data.key;
-            document.getElementById('last-update-container').textContent = data.lastUpdated;
-        }
-
         async function generateLink() {
             const button = document.getElementById('generate-link-btn');
-            const linkContainer = document.getElementById('generated-link-container');
-            const linkElement = document.getElementById('generated-link');
+            const infoContainer = document.getElementById('info-container');
 
-            if (button.textContent === "Generate Unique Link") {
-                // Fetch generated link from API
-                const response = await fetch('/api/generate-link');
+            // Fetch data from API
+            try {
+                const response = await fetch('/api/time'); // Ganti dengan endpoint API Anda
                 const data = await response.json();
-                linkElement.textContent = data.link;
-                linkElement.href = data.link;
 
-                // Show the generated link and change button text
-                linkContainer.style.display = 'block';
-                button.textContent = "Back";
-            } else {
-                // Reset the view and hide the generated link
-                linkContainer.style.display = 'none';
-                button.textContent = "Generate Unique Link";
+                // Isi elemen dengan data dari API
+                document.getElementById('time-container').textContent = `${data.hours}:${data.minutes}:${data.seconds}`;
+                document.getElementById('key-container').textContent = data.key;
+                document.getElementById('last-update-container').textContent = data.lastUpdated;
+
+                const generatedLink = `/user/${data.key}`;
+                const linkElement = document.getElementById('generated-link');
+                linkElement.textContent = generatedLink;
+                linkElement.href = generatedLink;
+
+                // Tampilkan elemen informasi
+                infoContainer.style.display = 'block';
+
+                // Ubah teks tombol
+                button.style.display = 'none';
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                alert('Failed to generate link. Please try again.');
             }
         }
 
-        // Add event listener to the button
+        // Tambahkan event listener ke tombol
         document.getElementById('generate-link-btn').addEventListener('click', generateLink);
-
-        // Automatically update time every second
-        setInterval(fetchTime, 1000);
-        fetchTime();
     </script>
 </body>
 </html>
