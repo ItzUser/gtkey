@@ -41,6 +41,7 @@
             font-size: 18px;
             border-radius: 5px;
             cursor: pointer;
+            margin-top: 20px;
         }
 
         button:hover {
@@ -56,10 +57,20 @@
         th, td {
             padding: 10px;
             border: 1px solid white;
+            text-align: center;
         }
 
         th {
             background: rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+        }
+
+        td {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #info-table {
+            display: none; /* Awalnya tersembunyi */
         }
     </style>
 </head>
@@ -67,7 +78,7 @@
     <div class="container">
         <h1>Generate Link</h1>
         <button id="generate-link-btn">Generate Link</button>
-        <table id="info-table" style="display: none;">
+        <table id="info-table">
             <thead>
                 <tr>
                     <th>Time</th>
