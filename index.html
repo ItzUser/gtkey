@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Unique Links</title>
+    <title>Generate Link</title>
     <style>
         body {
             margin: 0;
@@ -33,109 +33,83 @@
             letter-spacing: 2px;
         }
 
-        .info {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .info div {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            font-size: 18px;
-        }
-
-        .info div span.label {
-            display: block;
-            font-weight: bold;
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
-
-        #generate-link-btn {
-            margin-top: 20px;
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
             padding: 10px 20px;
             font-size: 18px;
+            border-radius: 5px;
             cursor: pointer;
-            background-color: #28a745;
-            border: none;
-            color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        #generate-link-btn:hover {
-            background-color: #218838;
+        button:hover {
+            background: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid white;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Generate Unique Links</h1>
-        <div class="info">
-            <div>
-                <span class="label">Time:</span>
-                <span id="time-container">Loading...</span>
-            </div>
-            <div>
-                <span class="label">Key:</span>
-                <span id="key-container">Loading...</span>
-            </div>
-            <div>
-                <span class="label">Last Updated:</span>
-                <span id="last-update-container">Loading...</span>
-            </div>
-        </div>
-        <button id="generate-link-btn">Generate Unique Link</button>
-        <div id="generated-link-container" style="margin-top: 20px; display: none;">
-            <span class="label">Generated Link:</span>
-            <a id="generated-link" href="#" target="_blank">Loading...</a>
-        </div>
+        <h1>Generate Link</h1>
+        <button id="generate-link-btn">Generate Link</button>
+        <table id="info-table" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Key</th>
+                    <th>Last Updated</th>
+                </tr>
+            </thead>
+            <tbody id="info-table-body">
+                <!-- Data akan dimasukkan di sini -->
+            </tbody>
+        </table>
     </div>
 
     <script>
+        const generateLinkButton = document.getElementById('generate-link-btn');
+        const infoTable = document.getElementById('info-table');
+        const infoTableBody = document.getElementById('info-table-body');
+
         async function fetchTime() {
             try {
                 const response = await fetch('/api/time');
                 const data = await response.json();
 
-                const timeString = `${data.hours}:${data.minutes}:${data.seconds}`;
-                const lastUpdated = data.lastUpdated;
+                // Masukkan data ke dalam tabel
+                infoTableBody.innerHTML = `
+                    <tr>
+                        <td>${data.hours}:${data.minutes}:${data.seconds}</td>
+                        <td>${data.key}</td>
+                        <td>${data.lastUpdated}</td>
+                    </tr>
+                `;
 
-                document.getElementById('time-container').textContent = timeString;
-                document.getElementById('key-container').textContent = data.key;
-                document.getElementById('last-update-container').textContent = lastUpdated;
+                // Tampilkan tabel
+                infoTable.style.display = 'table';
             } catch (error) {
                 console.error('Error fetching time:', error);
-                document.getElementById('time-container').textContent = 'Error fetching time';
-                document.getElementById('key-container').textContent = 'Error fetching key';
-                document.getElementById('last-update-container').textContent = 'Error fetching last updated time';
+                alert('Failed to fetch data. Please try again.');
             }
         }
 
-        async function generateLink() {
-            try {
-                const response = await fetch('/api/generate-link');
-                const data = await response.json();
-
-                const linkContainer = document.getElementById('generated-link-container');
-                const linkElement = document.getElementById('generated-link');
-
-                linkElement.textContent = data.link;
-                linkElement.href = data.link;
-                linkContainer.style.display = 'block';
-            } catch (error) {
-                console.error('Error generating link:', error);
-                alert('Failed to generate link. Please try again.');
-            }
-        }
-
-        document.getElementById('generate-link-btn').addEventListener('click', generateLink);
-
-        setInterval(fetchTime, 1000);
-        fetchTime();
+        // Event listener untuk tombol Generate Link
+        generateLinkButton.addEventListener('click', fetchTime);
     </script>
 </body>
 </html>
