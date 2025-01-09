@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -51,8 +52,10 @@ app.get('/api/generate-link', (req, res) => {
     res.json({ link });
 });
 
-// Serve static files from the `/public` folder
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files (index.html)
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // Jalankan server
 app.listen(PORT, () => {
