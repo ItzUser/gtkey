@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Current Time & Key</title>
+    <title>Generate Unique Links</title>
     <style>
         body {
             margin: 0;
@@ -34,7 +34,7 @@
         }
 
         .info {
-            display: none; /* Disembunyikan sampai tombol diklik */
+            display: flex;
             flex-direction: column;
             gap: 20px;
         }
@@ -54,35 +54,27 @@
             margin-bottom: 5px;
         }
 
-        button {
-            background: #004b8d;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
+        #generate-link-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
             font-size: 18px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        button:hover {
-            background: #007bff;
-        }
-
-        .unique-link {
-            margin-top: 20px;
-            font-size: 16px;
-            text-decoration: underline;
-            color: #00ffcc;
-            cursor: pointer;
+        #generate-link-btn:hover {
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Current Time & Key</h1>
-        <button id="show-info-button">Show Info</button> <!-- Tombol -->
-        <div class="info" id="info-container">
+        <h1>Generate Unique Links</h1>
+        <div class="info">
             <div>
                 <span class="label">Time:</span>
                 <span id="time-container">Loading...</span>
@@ -95,47 +87,23 @@
                 <span class="label">Last Updated:</span>
                 <span id="last-update-container">Loading...</span>
             </div>
-            <a id="unique-link" class="unique-link" href="#" target="_blank">Your Unique Link</a>
+        </div>
+        <button id="generate-link-btn">Generate Unique Link</button>
+        <div id="generated-link-container" style="margin-top: 20px; display: none;">
+            <span class="label">Generated Link:</span>
+            <a id="generated-link" href="#" target="_blank">Loading...</a>
         </div>
     </div>
 
     <script>
-        const showInfoButton = document.getElementById('show-info-button');
-        const infoContainer = document.getElementById('info-container');
-        const uniqueLink = document.getElementById('unique-link');
-
-        function generateUniqueLink() {
-            // Generate a unique identifier (UUID)
-            const uniqueId = crypto.randomUUID();
-            // Construct a unique link (you can customize this base URL)
-            const baseUrl = window.location.origin; // Current domain
-            return `${baseUrl}/user/${uniqueId}`;
-        }
-
-        // Event listener untuk tombol
-        showInfoButton.addEventListener('click', () => {
-            infoContainer.style.display = 'flex'; // Tampilkan elemen info
-            showInfoButton.style.display = 'none'; // Sembunyikan tombol setelah diklik
-            
-            // Generate link dan tampilkan
-            const link = generateUniqueLink();
-            uniqueLink.href = link;
-            uniqueLink.textContent = link;
-
-            // Panggil fungsi untuk memuat data waktu
-            fetchTime();
-        });
-
         async function fetchTime() {
             try {
-                const response = await fetch('/api/time'); // Fetch data dari API
+                const response = await fetch('/api/time');
                 const data = await response.json();
 
-                // Format waktu menjadi HOURS:MINUTES:SECONDS
                 const timeString = `${data.hours}:${data.minutes}:${data.seconds}`;
-                const lastUpdated = new Date(data.lastUpdated).toLocaleString(); // Format waktu update terakhir
+                const lastUpdated = data.lastUpdated;
 
-                // Menampilkan data ke elemen
                 document.getElementById('time-container').textContent = timeString;
                 document.getElementById('key-container').textContent = data.key;
                 document.getElementById('last-update-container').textContent = lastUpdated;
@@ -147,11 +115,27 @@
             }
         }
 
-        setInterval(() => {
-            if (infoContainer.style.display === 'flex') { // Hanya refresh jika elemen info ditampilkan
-                fetchTime();
+        async function generateLink() {
+            try {
+                const response = await fetch('/api/generate-link');
+                const data = await response.json();
+
+                const linkContainer = document.getElementById('generated-link-container');
+                const linkElement = document.getElementById('generated-link');
+
+                linkElement.textContent = data.link;
+                linkElement.href = data.link;
+                linkContainer.style.display = 'block';
+            } catch (error) {
+                console.error('Error generating link:', error);
+                alert('Failed to generate link. Please try again.');
             }
-        }, 1000);
+        }
+
+        document.getElementById('generate-link-btn').addEventListener('click', generateLink);
+
+        setInterval(fetchTime, 1000);
+        fetchTime();
     </script>
 </body>
 </html>
