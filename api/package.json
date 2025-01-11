@@ -2,15 +2,13 @@
   "name": "keystem-lua",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node api/time.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.21.2",
-    "uuid": "^9.0.0"
+    "express": "^4.21.2"
   }
 }
