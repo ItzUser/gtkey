@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "https://gtkey.vercel.app/api/time.js", 
+      "path": "/api/time", 
       "schedule": "*/1 * * * *"
     }
   ]
