@@ -9,17 +9,6 @@ let lastUpdated = null;
 // Discord Webhook URL (ganti dengan webhook Anda sendiri)
 const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1326510907844722730/W4tKUX1HJdxHrkGnEN8sqtqmBPxbQHc7WoaY9BdyTYt_SHQaOy4DWoVfb3j3UhUToI4P/messages/1327622882129350743";
 
-// Fungsi untuk menghasilkan key acak dengan angka dan huruf
-function generateRandomKey() {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let key = '';
-    for (let i = 0; i < 10; i++) {
-        key += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return key;
-}
-
-// Fungsi untuk mengirim log ke Discord
 function sendLogToDiscord(key, timestamp) {
     const payload = JSON.stringify({
         content: `New Key Generated: **${key}**\nTimestamp: **${timestamp}**`,
@@ -37,7 +26,7 @@ function sendLogToDiscord(key, timestamp) {
     };
 
     const req = https.request(options, (res) => {
-        if (res.statusCode !== 204) {
+        if (res.statusCode !== 200) {
             console.error(`Failed to send log to Discord: ${res.statusCode}`);
         }
     });
@@ -48,6 +37,15 @@ function sendLogToDiscord(key, timestamp) {
 
     req.write(payload);
     req.end();
+}
+// Fungsi untuk menghasilkan key acak dengan angka dan huruf
+function generateRandomKey() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let key = '';
+    for (let i = 0; i < 10; i++) {
+        key += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return key;
 }
 
 // Fungsi untuk memperbarui key setiap 5 menit
