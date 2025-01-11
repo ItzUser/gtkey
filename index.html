@@ -112,8 +112,8 @@
                 document.getElementById('key-container').textContent = data.key;
                 document.getElementById('last-update-container').textContent = data.lastUpdated;
 
-                const generatedLink = `/user/${data.key}`;
-                const linkElement = document.getElementById('generated-link');
+                const generatedLink = `${data.key}`;
+                const linkElement = document.getElementById('/api/time');
                 linkElement.textContent = generatedLink;
                 linkElement.href = generatedLink;
 
@@ -133,3 +133,6 @@
     </script>
 </body>
 </html>
+
+
+Bisakah anda ubah index.html sesuai logika yg anda berikan diatas
