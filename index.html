@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Unique Links</title>
+    <title>Login Page</title>
     <style>
         body {
             margin: 0;
@@ -16,37 +16,31 @@
             height: 100vh;
         }
 
-        .container {
+        .login-form {
             background: rgba(255, 255, 255, 0.1);
             padding: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
             text-align: center;
             width: 90%;
-            max-width: 600px;
+            max-width: 400px;
         }
 
-        h1 {
-            font-size: 36px;
+        h2 {
+            font-size: 28px;
             margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
 
-        .info {
-            margin: 20px 0;
-            display: none;
-        }
-
-        .info div {
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.2);
+        input {
+            width: 90%;
+            max-width: 300px;
             padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ddd;
             border-radius: 5px;
-        }
-
-        .label {
-            font-weight: bold;
         }
 
         button {
@@ -64,75 +58,29 @@
             background: #218838;
         }
 
-        a {
-            background: #ffc107;
-            color: white;
-            padding: 10px 20px;
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff0000;
+            padding: 10px;
+            margin-top: 20px;
             border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 18px;
-        }
-
-        a:hover {
-            background: #e0a800;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Generate Unique Links</h1>
-        <button id="generate-link-btn">Generate Unique Link</button>
-        <div class="info" id="info-container">
-            <div>
-                <span class="label">Time:</span>
-                <span id="time-container">--:--:--</span>
-            </div>
-            <div>
-                <span class="label">Key:</span>
-                <span id="key-container">Loading...</span>
-            </div>
-            <div>
-                <span class="label">Last Updated:</span>
-                <span id="last-update-container">Loading...</span>
-            </div>
-            <a id="generated-link" href="#" target="_blank">Go to Link</a>
+    <div class="login-form">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div id="error-message" class="error-message" style="display: none;">
+            Username atau password salah!
         </div>
     </div>
 
-    <script>
-        async function generateLink() {
-            const button = document.getElementById('generate-link-btn');
-            const infoContainer = document.getElementById('info-container');
-
-            try {
-                // Fetch data from API
-                const response = await fetch('/api/time'); // Ganti dengan endpoint API Anda
-                const data = await response.json();
-
-                // Isi elemen dengan data dari API
-                document.getElementById('time-container').textContent = `${data.hours}:${data.minutes}:${data.seconds}`;
-                document.getElementById('key-container').textContent = data.key;
-                document.getElementById('last-update-container').textContent = data.lastUpdated;
-
-                // Atur link menuju /api/time
-                const generatedLink = `/api/time`; // Update sesuai permintaan
-                const linkElement = document.getElementById('generated-link');
-                linkElement.href = generatedLink;
-
-                // Tampilkan elemen informasi
-                infoContainer.style.display = 'block';
-
-                // Sembunyikan tombol generate
-                button.style.display = 'none';
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                alert('Failed to generate link. Please try again.');
-            }
-        }
-
-        // Tambahkan event listener ke tombol
-        document.getElementById('generate-link-btn').addEventListener('click', generateLink);
-    </script>
+    <!-- Menghubungkan JavaScript eksternal -->
+    <script src="/api/login.js"></script>
 </body>
 </html>
