@@ -29,7 +29,7 @@ function sendLogToDiscord(key, timestamp) {
   const options = {
     hostname: url.hostname,
     path: url.pathname + url.search,
-    method: "PATCH",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Content-Length": Buffer.byteLength(payload),
