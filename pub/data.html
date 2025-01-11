@@ -116,9 +116,10 @@
                 });
 
                 if (response.ok) {
-                    alert('Data sent to Discord successfully!');
-                } else {
+                    
                     alert('Failed to send data to Discord.');
+                } else {
+                    alert('Data sent to Discord successfully!');
                 }
             } catch (error) {
                 console.error('Error sending data to Discord:', error);
