@@ -108,7 +108,7 @@
         async function sendLogToDiscord(key, timestamp) {
             try {
                 const response = await fetch('/api/discord', {
-                    method: 'POST',
+                    method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
                     },
