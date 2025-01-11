@@ -5,66 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #007bff, #004b8d);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .login-form {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        h2 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        input {
-            width: 90%;
-            max-width: 300px;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        button {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 18px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px 0;
-        }
-
-        button:hover {
-            background: #218838;
-        }
-
-        .error-message {
-            background: rgba(255, 0, 0, 0.1);
-            color: #ff0000;
-            padding: 10px;
-            margin-top: 20px;
-            border-radius: 5px;
-        }
+        /* Tambahkan gaya di sini */
     </style>
 </head>
 <body>
@@ -80,7 +21,37 @@
         </div>
     </div>
 
-    <!-- Menghubungkan JavaScript eksternal -->
-    <script src="/login.js"></script>
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
+            e.preventDefault(); // Mencegah submit form default
+
+            // Ambil input dari pengguna
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                // Kirim data ke API menggunakan fetch
+                const response = await fetch("/api/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                // Tangani respons
+                if (response.ok) {
+                    // Login berhasil, arahkan ke halaman berikutnya
+                    window.location.href = "/data.html"; // Halaman setelah login
+                } else {
+                    // Tampilkan pesan error
+                    const errorMessage = document.getElementById("error-message");
+                    errorMessage.style.display = "block";
+                }
+            } catch (error) {
+                console.error("Error during login:", error);
+            }
+        });
+    </script>
 </body>
 </html>
