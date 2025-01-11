@@ -28,7 +28,7 @@ function sendLogToDiscord(key, timestamp) {
       "Content-Type": "application/json",
       "Content-Length": Buffer.byteLength(payload),
     },
-    timeout: 5000,
+    timeout: 500,
   };
 
   const req = https.request(options, (res) => {
