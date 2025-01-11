@@ -7,7 +7,7 @@ let cachedKey = null;
 let lastUpdated = null;
 
 // Discord Webhook URL (ganti dengan webhook Anda sendiri)
-const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1326510907844722730/W4tKUX1HJdxHrkGnEN8sqtqmBPxbQHc7WoaY9BdyTYt_SHQaOy4DWoVfb3j3UhUToI4P";
+const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1326510907844722730/W4tKUX1HJdxHrkGnEN8sqtqmBPxbQHc7WoaY9BdyTYt_SHQaOy4DWoVfb3j3UhUToI4P/messages/1327622882129350743";
 
 // Fungsi untuk menghasilkan key acak dengan angka dan huruf
 function generateRandomKey() {
@@ -29,7 +29,7 @@ function sendLogToDiscord(key, timestamp) {
     const options = {
         hostname: url.hostname,
         path: url.pathname + url.search,
-        method: 'POST',
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
             'Content-Length': Buffer.byteLength(payload),
