@@ -1,8 +1,7 @@
 {
-  "rewrites": [
-    {
-      "source": "/user/:key",
-      "destination": "/api/:key"
+  "functions": {
+    "api/time.js": {
+      "schedule": "*/1 * * * *"  // Menjalankan fungsi setiap 1 menit
     }
-  ]
+  }
 }
