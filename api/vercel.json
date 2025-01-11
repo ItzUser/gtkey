@@ -1,7 +1,8 @@
 {
-  "functions": {
-    "api/time.js": {
-      "schedule": "*/1 * * * *"
+  "crons": [
+    {
+      "path": "/api/time.js",
+      "schedule": "1 * * * *"
     }
-  }
+  ]
 }
