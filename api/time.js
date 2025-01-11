@@ -7,7 +7,7 @@ let cachedKey = null;
 let lastUpdated = null;
 
 // Discord Webhook URL (ganti dengan webhook Anda sendiri)
-const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN";
+const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1326510907844722730/W4tKUX1HJdxHrkGnEN8sqtqmBPxbQHc7WoaY9BdyTYt_SHQaOy4DWoVfb3j3UhUToI4P";
 
 // Fungsi untuk menghasilkan key acak dengan angka dan huruf
 function generateRandomKey() {
