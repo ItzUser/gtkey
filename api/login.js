@@ -1,19 +1,22 @@
-// login.js
 
-document.getElementById("loginForm").addEventListener("submit", function (e) {
-    e.preventDefault(); // Mencegah form submit default
 
-    // Ambil nilai dari input username dan password
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+export default function handler(req, res) {
+    if (req.method === "POST") {
+        const { username, password } = req.body;
 
-    // Lakukan validasi sederhana (bisa disesuaikan sesuai kebutuhan)
-    if (username === "admin" && password === "password123") {
-        // Login berhasil, arahkan ke halaman Show Data
-        window.location.href = "/data.html"; // Sesuaikan nama halaman jika berbeda
+        // Username dan password yang valid
+        const validUsername = "user";
+        const validPassword = "user";
+
+        // Cek validitas username dan password
+        if (username === validUsername && password === validPassword) {
+            return res.status(200).json({ message: "Login berhasil!" });
+            window.location.href = "/data.html"; // Sesuaikan nama halaman jika berbeda
+        } else {
+            return res.status(400).json({ message: "Username atau password salah!" });
+        }
     } else {
-        // Tampilkan pesan error
-        const errorMessage = document.getElementById("error-message");
-        errorMessage.style.display = "block";
+        // Jika bukan metode POST
+        res.status(405).json({ message: "Method not allowed" });
     }
-});
+}
