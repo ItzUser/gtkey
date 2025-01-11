@@ -10,7 +10,7 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
     // Lakukan validasi sederhana (bisa disesuaikan sesuai kebutuhan)
     if (username === "admin" && password === "password123") {
         // Login berhasil, arahkan ke halaman Show Data
-        window.location.href = "/index.html"; // Sesuaikan nama halaman jika berbeda
+        window.location.href = "/data.html"; // Sesuaikan nama halaman jika berbeda
     } else {
         // Tampilkan pesan error
         const errorMessage = document.getElementById("error-message");
