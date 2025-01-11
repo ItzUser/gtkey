@@ -11,7 +11,6 @@ export default function handler(req, res) {
         // Cek validitas username dan password
         if (username === validUsername && password === validPassword) {
             return res.status(200).json({ message: "Login berhasil!" });
-            window.location.href = "/data.html"; // Sesuaikan nama halaman jika berbeda
         } else {
             return res.status(400).json({ message: "Username atau password salah!" });
         }
