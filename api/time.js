@@ -122,10 +122,9 @@ function editLogOnDiscord(key, timestamp) {
   req.end();
 }
 
-// Endpoint handler untuk API
-module.exports = (req, res) => {
-  // Perbarui key dan kirim log setiap kali API dipanggil
-  updateKeyAndSendLog();
+export default function handler(req, res) {
+  res.status(200).end
+    updateKeyAndSendLog();
 
   const now = new Date();
   const timeData = {
@@ -136,6 +135,5 @@ module.exports = (req, res) => {
     key: cachedKey,
     lastUpdated: new Date(lastUpdated).toISOString(),
   };
+}
 
-  res.status(200).json(timeData);
-};
