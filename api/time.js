@@ -123,7 +123,7 @@ function editLogOnDiscord(key, timestamp) {
 }
 
 export default function handler(req, res) {
-  res.status(200).end
+  res.status(200).end('Hello Cron!');
     updateKeyAndSendLog();
 
   const now = new Date();
