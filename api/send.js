@@ -9,10 +9,23 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Missing key or timestamp' });
     }
 
+    // Fungsi untuk mengonversi ISO 8601 ke detik Unix
+    const isoToEpoch = (isoTime) => {
+        const date = new Date(isoTime);
+        return Math.floor(date.getTime() / 1000); // Mengembalikan dalam detik
+    };
+
+    // Konversi timestamp ISO ke Unix epoch
+    const epochTime = isoToEpoch(timestamp);
+
+    // Format timestamp dalam format Discord <t:EPOCH:R>
+    const formattedTime = `<t:${epochTime}:R>`;
+
+    // Webhook URL Discord
     const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1326510907844722730/W4tKUX1HJdxHrkGnEN8sqtqmBPxbQHc7WoaY9BdyTYt_SHQaOy4DWoVfb3j3UhUToI4P/messages/1327622882129350743";
 
     const payload = {
-        content: `**New Key Generated: **${key}**\nTimestamp: **${new Date(timestamp).toLocaleString()}**`,
+        content: `**New Key Generated: **${key}**\nTimestamp: **${formattedTime}`,
     };
 
     try {
