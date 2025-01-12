@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1326510907844722730/W4tKUX1HJdxHrkGnEN8sqtqmBPxbQHc7WoaY9BdyTYt_SHQaOy4DWoVfb3j3UhUToI4P/messages/1327622882129350743";
 
     const payload = {
-        content: `**Edited Message:**\nNew Key Generated: **${key}**\nTimestamp: **${new Date(timestamp).toLocaleString()}**`,
+        content: `**New Key Generated: **${key}**\nTimestamp: **${new Date(timestamp).toLocaleString()}**`,
     };
 
     try {
