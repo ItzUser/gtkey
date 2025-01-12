@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Page</title>
     <style>
-        /* Tambahkan style Anda di sini */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -27,6 +26,28 @@
             max-width: 600px;
         }
 
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .info {
+            margin: 20px 0;
+        }
+
+        .info div {
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
         button {
             background: #ffc107;
             color: white;
@@ -45,32 +66,55 @@
 <body>
     <div class="container">
         <h1>Data Page</h1>
-        <div id="info-container">
+        <div class="info" id="info-container">
             <div>
-                <strong>Time:</strong> <span id="time">--:--:--</span>
+                <span class="label">Time:</span>
+                <span id="time-container">--:--:--</span>
             </div>
             <div>
-                <strong>Key:</strong> <span id="key">Loading...</span>
+                <span class="label">Key:</span>
+                <span id="key-container">Loading...</span>
             </div>
             <div>
-                <strong>Last Updated:</strong> <span id="last-updated">Loading...</span>
+                <span class="label">Last Updated:</span>
+                <span id="last-update-container">Loading...</span>
             </div>
             <button id="send-to-discord">Send Data to Discord</button>
         </div>
     </div>
 
     <script>
-        const apiEndpoint = '/api/send'; // Vercel akan otomatis mengenali ini sebagai endpoint API
+        const timeApiEndpoint = '/api/time';
+        const sendApiEndpoint = '/api/send';
 
-        async function sendToDiscord() {
-            const key = document.getElementById('key').textContent;
-            const timestamp = new Date().toISOString();
+        let fetchedData = {};
 
+        // Function to fetch time data from API
+        async function fetchTimeData() {
             try {
-                const response = await fetch(apiEndpoint, {
+                const response = await fetch(timeApiEndpoint);
+                const data = await response.json();
+
+                // Update DOM with fetched data
+                document.getElementById('time-container').textContent = `${data.hours}:${data.minutes}:${data.seconds}`;
+                document.getElementById('key-container').textContent = data.key;
+                document.getElementById('last-update-container').textContent = new Date(data.lastUpdated).toLocaleString();
+
+                fetchedData = data; // Store data for sending to Discord
+            } catch (error) {
+                console.error('Error fetching time data:', error);
+            }
+        }
+
+        // Function to send data to Discord
+        async function sendLogToDiscord() {
+            try {
+                const { key, lastUpdated } = fetchedData;
+
+                const response = await fetch(sendApiEndpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ key, timestamp }),
+                    body: JSON.stringify({ key, timestamp: lastUpdated }),
                 });
 
                 const result = await response.json();
@@ -80,19 +124,16 @@
                     alert(result.error);
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error sending log to Discord:', error);
                 alert('An error occurred while sending data to Discord.');
             }
         }
 
-        document.getElementById('send-to-discord').addEventListener('click', sendToDiscord);
+        // Event listener for the button
+        document.getElementById('send-to-discord').addEventListener('click', sendLogToDiscord);
 
-        // Simulate data for demonstration purposes
-        setTimeout(() => {
-            document.getElementById('key').textContent = 'ExampleKey123';
-            document.getElementById('time').textContent = '12:34:56';
-            document.getElementById('last-updated').textContent = new Date().toLocaleString();
-        }, 1000);
+        // Fetch time data every second
+        setInterval(fetchTimeData, 1000);
     </script>
 </body>
 </html>
