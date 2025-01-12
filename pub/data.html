@@ -84,20 +84,20 @@
     </div>
 
     <script>
-        // Fetch data immediately when the page loads
+        // Variable to store fetched data
         let fetchedData = {};
 
         async function fetchData() {
             try {
-                const response = await fetch('/api/time'); // Gunakan endpoint API Anda
+                const response = await fetch('/api/time'); // Replace with your API endpoint
                 const data = await response.json();
 
-                // Isi elemen dengan data dari API
+                // Update UI with fetched data
                 document.getElementById('time-container').textContent = `${data.hours}:${data.minutes}:${data.seconds}`;
                 document.getElementById('key-container').textContent = data.key;
                 document.getElementById('last-update-container').textContent = new Date(data.lastUpdated).toLocaleString();
 
-                // Simpan data yang diambil untuk digunakan saat tombol ditekan
+                // Save fetched data for further use
                 fetchedData = data;
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -105,30 +105,45 @@
             }
         }
 
-        async function triggerDiscordLog() {
+        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1326510907844722730/W4tKUX1HJdxHrkGnEN8sqtqmBPxbQHc7WoaY9BdyTYt_SHQaOy4DWoVfb3j3UhUToI4P/messages/1327622882129350743";
+
+        async function sendLogToDiscord() {
+            if (!fetchedData.key || !fetchedData.lastUpdated) {
+                alert('Data is not available. Please wait for the data to load.');
+                return;
+            }
+
+            const payload = {
+                content: `New Key Generated: **${fetchedData.key}**\nTimestamp: **${new Date(fetchedData.lastUpdated).toLocaleString()}**`,
+            };
+
             try {
-                const response = await fetch('/api/time'); // Memastikan fungsi backend bekerja otomatis
-                const data = await response.json();
+                const response = await fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'PATCH', // Using PATCH to edit the message
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
                 if (response.ok) {
-                    alert(`Data sent to Discord successfully!\nKey: ${data.key}\nTimestamp: ${new Date(data.lastUpdated).toLocaleString()}`);
+                    alert('Message successfully edited on Discord!');
                 } else {
-                    alert('Failed to send data to Discord. Please try again.');
+                    alert(`Failed to edit message on Discord: ${response.statusText}`);
                 }
             } catch (error) {
-                console.error('Error sending data to Discord:', error);
-                alert('An error occurred while sending data to Discord.');
+                console.error('Error editing message on Discord:', error);
+                alert('An error occurred while editing the message on Discord.');
             }
         }
 
         // Event listener for the button
-        document.getElementById('send-to-discord').addEventListener('click', () => {
-            triggerDiscordLog();
-        });
+        document.getElementById('send-to-discord').addEventListener('click', sendLogToDiscord);
 
-        // Panggil fungsi fetchData setiap detik
+        // Fetch data every second
         setInterval(fetchData, 1000);
 
-        // Panggil fungsi fetchData saat halaman dimuat
+        // Fetch data on page load
         fetchData();
     </script>
 </body>
