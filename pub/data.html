@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Page</title>
     <style>
+        /* Tambahkan style Anda di sini */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -26,28 +27,6 @@
             max-width: 600px;
         }
 
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .info {
-            margin: 20px 0;
-        }
-
-        .info div {
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .label {
-            font-weight: bold;
-        }
-
         button {
             background: #ffc107;
             color: white;
@@ -66,85 +45,54 @@
 <body>
     <div class="container">
         <h1>Data Page</h1>
-        <div class="info" id="info-container">
+        <div id="info-container">
             <div>
-                <span class="label">Time:</span>
-                <span id="time-container">--:--:--</span>
+                <strong>Time:</strong> <span id="time">--:--:--</span>
             </div>
             <div>
-                <span class="label">Key:</span>
-                <span id="key-container">Loading...</span>
+                <strong>Key:</strong> <span id="key">Loading...</span>
             </div>
             <div>
-                <span class="label">Last Updated:</span>
-                <span id="last-update-container">Loading...</span>
+                <strong>Last Updated:</strong> <span id="last-updated">Loading...</span>
             </div>
-            <button id="send-to-discord">Send Data To Discord</button>
+            <button id="send-to-discord">Send Data to Discord</button>
         </div>
     </div>
 
     <script>
-        // Variable to store fetched data
-        let fetchedData = {};
+        const apiEndpoint = '/api/send'; // Vercel akan otomatis mengenali ini sebagai endpoint API
 
-        async function fetchData() {
-            try {
-                const response = await fetch('/api/time'); // Replace with your API endpoint
-                const data = await response.json();
-
-                // Update UI with fetched data
-                document.getElementById('time-container').textContent = `${data.hours}:${data.minutes}:${data.seconds}`;
-                document.getElementById('key-container').textContent = data.key;
-                document.getElementById('last-update-container').textContent = new Date(data.lastUpdated).toLocaleString();
-
-                // Save fetched data for further use
-                fetchedData = data;
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                alert('Failed to fetch data. Please try again.');
-            }
-        }
-
-        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1326510907844722730/W4tKUX1HJdxHrkGnEN8sqtqmBPxbQHc7WoaY9BdyTYt_SHQaOy4DWoVfb3j3UhUToI4P/messages/1327622882129350743";
-
-        async function sendLogToDiscord() {
-            if (!fetchedData.key || !fetchedData.lastUpdated) {
-                alert('Data is not available. Please wait for the data to load.');
-                return;
-            }
-
-            const payload = {
-                content: `New Key Generated: **${fetchedData.key}**\nTimestamp: **${new Date(fetchedData.lastUpdated).toLocaleString()}**`,
-            };
+        async function sendToDiscord() {
+            const key = document.getElementById('key').textContent;
+            const timestamp = new Date().toISOString();
 
             try {
-                const response = await fetch(DISCORD_WEBHOOK_URL, {
-                    method: 'PATCH', // Using PATCH to edit the message
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
+                const response = await fetch(apiEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key, timestamp }),
                 });
 
+                const result = await response.json();
                 if (response.ok) {
-                    alert('Message successfully edited on Discord!');
+                    alert(result.message);
                 } else {
-                    alert(`Failed to edit message on Discord: ${response.statusText}`);
+                    alert(result.error);
                 }
             } catch (error) {
-                console.error('Error editing message on Discord:', error);
-                alert('An error occurred while editing the message on Discord.');
+                console.error('Error:', error);
+                alert('An error occurred while sending data to Discord.');
             }
         }
 
-        // Event listener for the button
-        document.getElementById('send-to-discord').addEventListener('click', sendLogToDiscord);
+        document.getElementById('send-to-discord').addEventListener('click', sendToDiscord);
 
-        // Fetch data every second
-        setInterval(fetchData, 1000);
-
-        // Fetch data on page load
-        fetchData();
+        // Simulate data for demonstration purposes
+        setTimeout(() => {
+            document.getElementById('key').textContent = 'ExampleKey123';
+            document.getElementById('time').textContent = '12:34:56';
+            document.getElementById('last-updated').textContent = new Date().toLocaleString();
+        }, 1000);
     </script>
 </body>
 </html>
